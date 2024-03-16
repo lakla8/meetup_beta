@@ -34,12 +34,3 @@ def request_rest_data(location_id, key):
 
 
 
-
-
-#url = "https://api.content.tripadvisor.com/api/v1/location/18976689/details?key=89D47A37721748829B73F04D54BAC38C&language=en&currency=USD"
-
-#headers = {"accept": "application/json"}
-
-#response = requests.get(url, headers=headers)
-
-#print(response.text)
