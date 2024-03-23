@@ -8,6 +8,7 @@ def request_for_id(key, name, lat, long):
     response = requests.get(url_id, headers=headers)
     try:
         json_data = response.json()['data']
+        print(json_data)
         location_id = json_data[0]['location_id']
         print(json_data[0]['distance'], json_data[0]['name'])
         return location_id
@@ -16,7 +17,7 @@ def request_for_id(key, name, lat, long):
         print(response.json()['error']['code'])
         print(response.json()['error']['message'])
         print(response.json()['error']['type'])
-    return None
+        return err
 
 
 def request_rest_data(location_id, key):

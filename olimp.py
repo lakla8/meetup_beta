@@ -1,8 +1,14 @@
 import psycopg2
-
+import json
 """херня сверху будет жаловаться на линуксе и макосе, устанавливайте постгре через brew
 код создает таблицу для хранения инфы о ресторанах
 """
+def create_json_file(input_data, output_file):
+    output_dict = {'data_list': input_data}
+    output_dict = json.dumps(output_dict, indent=2)
+
+    with open(output_file, 'w') as f:
+        f.write(output_dict)
 
 def create_table():
     conn = psycopg2.connect(
