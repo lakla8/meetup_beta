@@ -1,5 +1,5 @@
 from qkiqsh import request_for_id, request_rest_data
-from olimp import create_table, insert_data, backup_postgresql, create_json_file
+from olimp import create_json_file
 import os, json
 from dotenv import load_dotenv
 
