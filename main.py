@@ -23,6 +23,5 @@ def start():
 
     create_json_file(json_data, "database.json")
 
-start()
 
 
