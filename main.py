@@ -1,6 +1,6 @@
 from qkiqsh import request_for_id, request_rest_data
 from olimp import create_json_file
-import os, json
+import os, json, numpy as np
 from dotenv import load_dotenv
 
 
@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 """
 
 
-def start():
+def create_database():
     load_dotenv()
     with open('db.json') as f:
         data_places = json.load(f)
@@ -23,6 +23,107 @@ def start():
 
     create_json_file(json_data, "database.json")
 
-start()
+
+def get_features_unique(data_places):
+    temporary_set = set()
+    for data in data_places:
+        try:
+            for feature in data['features']:
+                temporary_set.add(feature)
+        except KeyError as err:
+            continue
+    return temporary_set
+
+
+def get_cuisine_unique(data_places):
+    temporary_set = set()
+    for data in data_places:
+        try:
+            for food in data["cuisine"]:
+                temporary_set.add(food['name'])
+        except KeyError as err:
+            continue
+    return temporary_set
+
+
+def cosine_similarity(array1, array2):
+    return np.dot(array1, array2) / (np.linalg.norm(array1) * np.linalg.norm(array2))
+
+
+def list_coherence(array1, array2, c=0.0):
+    return [c if x not in array1 else 1.0 for x in array2]
+
+
+def make_change():
+    with open('database.json') as f:
+        data_places = json.load(f)['data_list']
+
+    abs_f = get_features_unique(data_places)
+    abs_c = get_cuisine_unique(data_places)
+
+    print(abs_f)
+    print(abs_c)
+
+    for place in data_places:
+        try:
+            place['features_abs'] = list_coherence(place['features'], abs_f)
+        except Exception as err:
+            place['features_abs'] = [0.0] * len(abs_f)
+
+        try:
+            temporary_data = [types['name'] for types in place['cuisine']]
+            place['cuisine_abs'] = list_coherence(temporary_data, abs_c)
+        except Exception as err:
+            place['cuisine_abs'] = [0.0] * len(abs_c)
+
+    create_json_file(data_places, 'database.json')
+
+
+def clear_errors():
+    with open('database.json') as f:
+        data_places = json.load(f)['data_list']
+
+    for place in data_places[:]:
+        if 'error' in list(place.keys()):
+            print(place)
+            data_places.remove(place)
+
+    create_json_file(data_places, 'database.json')
+
+
+
+
+def find_similarity(client, db_filename):
+    with open(db_filename) as f:
+        data_places = json.load(f)['data_list']
+
+    abs_f = get_features_unique(data_places)
+    abs_c = get_cuisine_unique(data_places)
+
+    print(abs_f)
+    print(abs_c)
+
+    features = list_coherence(client['features'], abs_f, c=0.5)
+    cuisine = list_coherence(client['cuisine'], abs_c)
+
+    best_results = []
+
+    for place in data_places:
+        print(place)
+        f_angle = cosine_similarity(features, place["features_abs"])
+        c_angle = cosine_similarity(cuisine, place['cuisine_abs'])
+        best_results.append([place['name'], [f_angle, c_angle]])
+
+    best_results.sort(key=lambda x: x[1][0], reverse=True)
+
+    return best_results
+
+
+client = {
+    'features': ['Takeout', "Seating", 'Reservations', 'Free Wifi'],
+    'cuisine': ['american', "fast_food", 'sushi', 'seafood']
+}
+
+print(find_similarity(client, 'database.json'))
 
 
