@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 
 def create_database():
     load_dotenv()
-    with open('resources/db.json') as f:
+    with open('../resources/db.json') as f:
         data_places = json.load(f)
     key = os.environ.get('API_KEY')
     json_data = []
@@ -21,7 +21,7 @@ def create_database():
             json_data_place = request_rest_data(location_id, key)
             json_data.append(json_data_place)
 
-    create_json_file(json_data, "resources/database.json")
+    create_json_file(json_data, "../resources/database.json")
 
 
 def get_features_unique(data_places):
@@ -55,7 +55,7 @@ def list_coherence(array1, array2, c=0.0):
 
 
 def make_change():
-    with open('resources/database.json') as f:
+    with open('../resources/database.json') as f:
         data_places = json.load(f)['data_list']
 
     abs_f = get_features_unique(data_places)
@@ -76,11 +76,11 @@ def make_change():
         except Exception as err:
             place['cuisine_abs'] = [0.0] * len(abs_c)
 
-    create_json_file(data_places, 'resources/database.json')
+    create_json_file(data_places, '../resources/database.json')
 
 
 def clear_errors():
-    with open('resources/database.json') as f:
+    with open('../resources/database.json') as f:
         data_places = json.load(f)['data_list']
 
     for place in data_places[:]:
@@ -88,7 +88,7 @@ def clear_errors():
             print(place)
             data_places.remove(place)
 
-    create_json_file(data_places, 'resources/database.json')
+    create_json_file(data_places, '../resources/database.json')
 
 
 
