@@ -123,12 +123,6 @@ def find_similarity(client, db_filename):
     return best_results
 
 
-client = {
-    'features': ["Seating"],
-    'cuisine': ['japanese_fusion']
-}
-
-print(find_similarity(client, 'resources/database.json'))
 
 
 
