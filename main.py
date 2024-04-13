@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 
 def create_database():
     load_dotenv()
-    with open('db.json') as f:
+    with open('resources/db.json') as f:
         data_places = json.load(f)
     key = os.environ.get('API_KEY')
     json_data = []
@@ -21,7 +21,7 @@ def create_database():
             json_data_place = request_rest_data(location_id, key)
             json_data.append(json_data_place)
 
-    create_json_file(json_data, "database.json")
+    create_json_file(json_data, "resources/database.json")
 
 
 def get_features_unique(data_places):
@@ -55,7 +55,7 @@ def list_coherence(array1, array2, c=0.0):
 
 
 def make_change():
-    with open('database.json') as f:
+    with open('resources/database.json') as f:
         data_places = json.load(f)['data_list']
 
     abs_f = get_features_unique(data_places)
@@ -76,11 +76,11 @@ def make_change():
         except Exception as err:
             place['cuisine_abs'] = [0.0] * len(abs_c)
 
-    create_json_file(data_places, 'database.json')
+    create_json_file(data_places, 'resources/database.json')
 
 
 def clear_errors():
-    with open('database.json') as f:
+    with open('resources/database.json') as f:
         data_places = json.load(f)['data_list']
 
     for place in data_places[:]:
@@ -88,7 +88,7 @@ def clear_errors():
             print(place)
             data_places.remove(place)
 
-    create_json_file(data_places, 'database.json')
+    create_json_file(data_places, 'resources/database.json')
 
 
 
@@ -103,8 +103,8 @@ def find_similarity(client, db_filename):
     print(abs_f)
     print(abs_c)
 
-    features = list_coherence(client['features'], abs_f, c=0.5)
-    cuisine = list_coherence(client['cuisine'], abs_c)
+    features = list_coherence(client['features'], abs_f, c=0.65)
+    cuisine = list_coherence(client['cuisine'], abs_c, c=-1.0)
 
     best_results = []
 
@@ -112,19 +112,23 @@ def find_similarity(client, db_filename):
         print(place)
         f_angle = cosine_similarity(features, place["features_abs"])
         c_angle = cosine_similarity(cuisine, place['cuisine_abs'])
-        best_results.append([place['name'], [f_angle, c_angle]])
+        if str(f_angle) == "nan" or str(c_angle) == "nan":
+            pass
+        else:
+            best_results.append([place['name'], place['features'], place['cuisine'], cosine_similarity([f_angle, c_angle], [1.0, 1.0])])
 
-    best_results.sort(key=lambda x: x[1][0], reverse=True)
+    best_results.sort(key=lambda x: x[3], reverse=True)
+
 
     return best_results
 
 
 client = {
-    'features': ['Takeout', "Seating", 'Reservations', 'Free Wifi'],
-    'cuisine': ['american', "fast_food", 'sushi', 'seafood']
+    'features': ["Seating"],
+    'cuisine': ['japanese_fusion']
 }
 
-print(find_similarity(client, 'database.json'))
+print(find_similarity(client, 'resources/database.json'))
 
 
 
