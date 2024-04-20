@@ -74,9 +74,9 @@ def handle_404(request, exception):
 
 
 def create_meet(request):
-    with open('main/static/form_resources/features.json', 'r') as file:
+    with open('django/main/static/form_resources/features.json', 'r') as file:
         features = json.load(file)
-    with open('main/static/form_resources/cuisine.json', 'r') as file:
+    with open('django/main/static/form_resources/cuisine.json', 'r') as file:
         cuisine = json.load(file)
 
     context = {
