@@ -1,64 +1,49 @@
 {% extends 'base_generic.html' %}
 
-{% block title %}
-Главная
-{% endblock %}
+{% block title %}Главная{% endblock %}
 
 {% block styles %}
     {% load static %}
     <link rel="stylesheet" href="{% static  'css/index.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/scroll.css' %}"/>
-    <link rel="stylesheet" href="{% static 'css/modal_account.css' %}"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/account_menu.css' %}"/>
 {% endblock %}
 
 {% block content %}
     {% include "nav.html" %}
     <main>
-        <div class="main__container">
-            <header>
-                <div class="group">
-                    <div id="logo">
-                        Название
-                    </div>
-                    <div class="inputWrapper">
-                        <div class="input__icon">
-                            <img src="{% static 'resources/search.svg' %}" alt="Поиск">
-                        </div>
-                        <input id="input" type="search" autocomplete="off" spellcheck="false" aria-controls="matches"
-                               placeholder="Введи название" aria-expanded="false" aria-live="polite">
-                    </div>
-                </div>
-                <div class="group__icon">
-                    <ul class="group__icon__list">
-                        <li>{% include 'dialog_template.html' %}</li>
-                        <li class="group__icon__item">
-                            <a class="group__icon__link" href="">
-                                <div class="icon">
-                                    <img src="{% static 'resources/settings.svg' %}" alt="Настройки">
+        <div class="page__content">
+            {% include "header.html" %}
+            <div class="page__content-main">
+                <div class="page__content-main-container">
+                    <div class="page__main">
+                        <div class="page__main-module">
+                            <div class="page__main-info">
+                                <div class="page__main-title">
+                                    Открой новые эмоции вместе с нами
                                 </div>
-                            </a>
-                        </li>
-                        <li class="group__icon__item" id="account">
-                            <a class="group__icon__link">
-                                <div class="icon">
-                                    <img src="{% static 'resources/account.svg' %}" alt="Аккаунт">
+                                <div class="page__main-subtitle">
+                                    Создано компанией название
                                 </div>
-                            </a>
-                            <div class="account-modal">
-                                <input type="text" placeholder="Логин">
-                                <input type="password" placeholder="Пароль">
-                                <button>Войти</button>
                             </div>
-                        </li>
-                    </ul>
+                            <div class="page__main-actions">
+                                <button class="page__main-join" type="button">Присоединиться</button>
+                                <button class="page__main-create" type="button">Создать</button>
+                            </div>
+                        </div>
+                        <div class="page__main-image">
+                            <img src="{% static 'resources/home_image.png' %}" alt="">
+                        </div>
+                    </div>
+                    <div class="place__content">
+                        <!-- Здесь должны распалагаться карточки мест -->
+                    </div>
                 </div>
-            </header>
-            <div class="content">
             </div>
         </div>
     </main>
 {% endblock %}
+
 {% block scripts %}
-    <script src="{% static 'js/modal_account.js' %}"></script>
+    <script src="{% static 'js/account_menu.js' %}"></script>
 {% endblock %}
