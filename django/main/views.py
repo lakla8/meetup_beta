@@ -1,7 +1,9 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.http.response import JsonResponse
 from django.shortcuts import render, redirect
 import json
+
 
 def home_view(request):
     """Render the home page template"""
@@ -23,7 +25,8 @@ def register_user(request):
         if User.objects.filter(username=email).exists():
             return render(request, 'register.html', {'error': 'Username already exists'})
         else:
-            user = User.objects.create_user(username=email, email=email, password=password, first_name=first_name, last_name=last_name)
+            user = User.objects.create_user(username=email, email=email, password=password, first_name=first_name,
+                                            last_name=last_name)
             user.save()
             return redirect('login')
     else:
@@ -35,12 +38,12 @@ def login_user(request):
     if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
-        
+
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
             return render(request, 'login.html', {'error': 'Неверный email или пароль'})
-            
+
         user = authenticate(request, username=user.username, password=password)
         if user is not None:
             login(request, user)
@@ -72,7 +75,6 @@ def handle_404(request, exception):
     return render(request, "404.html")
 
 
-
 def create_meet(request):
     with open('django/main/static/form_resources/features.json', 'r') as file:
         features = json.load(file)
@@ -84,3 +86,14 @@ def create_meet(request):
         'cuisines': cuisine
     }
     return render(request, 'meet.html', context)
+
+
+def fakefastapi(request):
+    print(request.method)
+    if request.method == "POST":
+        print(request.body)
+        print("ksjdhfsd")
+        return render(request, 'index.html', {"test": json.loads(request.body)})
+        # return JsonResponse(json.loads(request.body))
+    print("1111")
+    return render(request, 'index.html', )
