@@ -21,7 +21,7 @@ urlpatterns = [
     path("", views.home_view, name='home'),
     path('history/', views.history_view, name='history'),
     path('meet/<int:id>/', views.meet_view, name='meet'),
-    path("meet/create/", views.create_meet),
+    path("meet/create/", views.create_meet, name='create_meet'),
     path('accounts/login/', views.login_user, name='login'),
     path('accounts/logout/', views.logout_user, name='logout'),
     path('accounts/register/', views.register_user, name='register'),

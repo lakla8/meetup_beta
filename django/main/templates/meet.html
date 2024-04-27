@@ -35,21 +35,26 @@
                 </div>
                 <div class="create-meet__body">
                     <form id="restaurant-filter-form" method="POST">
+                        {% csrf_token %}
                         <div class="features">
                             <h2>Особенности</h2>
-                            <select name="features">
-                                {% for feature in features %}
-                                <option value="{{ feature }}">{{ feature }}</option>
-                                {% endfor %}
-                            </select>
+                            {% for feature in features %}
+                            <label class="checkbox-container">
+                                <input type="checkbox" name="features" value="{{ feature }}">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-label">{{ feature }}</span>
+                            </label>
+                            {% endfor %}
                         </div>
                         <div class="cuisine">
                             <h2>Кухня</h2>
-                            <select name="cuisine">
-                                {% for cuisine in cuisines %}
-                                <option value="{{ cuisine }}">{{ cuisine }}</option>
-                                {% endfor %}
-                            </select>
+                            {% for cuisine in cuisines %}
+                            <label class="checkbox-container">
+                                <input type="checkbox" name="cuisines" value="{{ cuisine }}">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-label">{{ cuisine }}</span>
+                            </label>
+                            {% endfor %}
                         </div>
 
                         <button type="submit" class="submit">Подобрать</button>
@@ -81,9 +86,4 @@
         </div>
     </div>
 </main>
-{% endblock %}
-
-{% block scripts %}
-<script src="{% static 'js/account_menu.js' %}"></script>
-<script src="{% static 'js/create_meet.js' %}"></script>
 {% endblock %}

@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponse
 from django.http.response import JsonResponse
 from django.shortcuts import render, redirect
 import json
@@ -76,24 +77,35 @@ def handle_404(request, exception):
 
 
 def create_meet(request):
-    with open('django/main/static/form_resources/features.json', 'r') as file:
-        features = json.load(file)
-    with open('django/main/static/form_resources/cuisine.json', 'r') as file:
-        cuisine = json.load(file)
 
-    context = {
-        'features': features,
-        'cuisines': cuisine
-    }
-    return render(request, 'meet.html', context)
+    if request.method == "POST":
+        cuisines = request.POST['cuisine']
+        features = request.POST['features']
+        context = {
+            'feature': features,
+            'cuisine': cuisines
+        }
+        return render(request, 'test.html', context=context)
+    else:
+        with open('django/main/static/form_resources/features.json', 'r') as file:
+            features = json.load(file)
+        with open('django/main/static/form_resources/cuisine.json', 'r') as file:
+            cuisine = json.load(file)
+        context = {
+            'features': features,
+            'cuisines': cuisine
+        }
+        return render(request, 'meet.html', context)
 
 
 def fakefastapi(request):
-    print(request.method)
     if request.method == "POST":
-        print(request.body)
-        print("ksjdhfsd")
-        return render(request, 'index.html', {"test": json.loads(request.body)})
-        # return JsonResponse(json.loads(request.body))
-    print("1111")
-    return render(request, 'index.html', )
+        try:
+            data = json.loads(request.body)
+            print(data)
+            return JsonResponse({'status': 'success', 'data': data})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Method not allowed'}, status=405)
+    
