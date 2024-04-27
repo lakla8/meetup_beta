@@ -1,17 +1,18 @@
+""" основное действие с датасетом происходит здесь. ваша задача
+переформатировать данные из экселя в data_places в формате json(пример place_data)
+"""
+
+
+
 from qkiqsh import request_for_id, request_rest_data
 from olimp import create_json_file
 import os, json, numpy as np
 from dotenv import load_dotenv
 
 
-""" основное действие с датасетом происходит здесь. ваша задача
-переформатировать данные из экселя в data_places в формате json(пример place_data)
-"""
-
-
 def create_database():
     load_dotenv()
-    with open('../resources/db.json') as f:
+    with open('../../resources/db.json') as f:
         data_places = json.load(f)
     key = os.environ.get('API_KEY')
     json_data = []
@@ -55,7 +56,7 @@ def list_coherence(array1, array2, c=0.0):
 
 
 def make_change():
-    with open('../resources/database.json') as f:
+    with open('../../resources/database.json') as f:
         data_places = json.load(f)['data_list']
 
     abs_f = get_features_unique(data_places)
@@ -80,7 +81,7 @@ def make_change():
 
 
 def clear_errors():
-    with open('../resources/database.json') as f:
+    with open('../../resources/database.json') as f:
         data_places = json.load(f)['data_list']
 
     for place in data_places[:]:
@@ -119,7 +120,7 @@ def find_similarity(client, db_filename):
 
     best_results.sort(key=lambda x: x[3], reverse=True)
 
-    return best_results
+    return best_results[:5]
 
 
 

@@ -1,5 +1,7 @@
-import requests
 """штука которая спрашивает датасет с триадвайзера"""
+
+import requests
+
 
 def request_for_id(key, name, lat, long):
     url_id = f"https://api.content.tripadvisor.com/api/v1/location/search?key={key}&searchQuery={name}&latLong={lat}%2C%20{long}&language=en"
