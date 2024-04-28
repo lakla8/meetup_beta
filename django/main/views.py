@@ -77,14 +77,14 @@ def handle_404(request, exception):
 
 
 def create_meet(request):
-
     if request.method == "POST":
-        cuisines = request.POST['cuisine']
-        features = request.POST['features']
+        cuisines = request.POST.getlist('cuisines') 
+        features = request.POST.getlist('features')  
         context = {
-            'feature': features,
-            'cuisine': cuisines
+            'features': features,
+            'cuisines': cuisines
         }
+        print(context)
         return render(request, 'test.html', context=context)
     else:
         with open('django/main/static/form_resources/features.json', 'r') as file:
