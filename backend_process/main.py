@@ -119,7 +119,6 @@ def find_similarity(client, db_filename):
 
     best_results.sort(key=lambda x: x[3], reverse=True)
 
-
     return best_results
 
 
