@@ -11,6 +11,7 @@
 
 {% block content %}
     {% include "nav.html" %}
+    {% include 'modal_dialog.html' %}
     <main>
         <div class="page__content">
             {% include "header.html" %}
@@ -19,6 +20,7 @@
                     <div class="page__main">
                         <div class="page__main-module">
                             <div class="page__main-info">
+                                <button onclick="openModal()">Open Modal</button>
                                 <div class="page__main-title">
                                     Открой новые эмоции вместе с нами
                                 </div>
@@ -46,4 +48,5 @@
 
 {% block scripts %}
     <script src="{% static 'js/account_menu.js' %}"></script>
+    <script src="{% static  'js/modal_dialog.js' %}"></script>
 {% endblock %}
