@@ -33,6 +33,7 @@ def add_user(id: str, features : list, cuisine : list, cost : None) -> dict[str,
         "client_id": id,
     }
 
+
 def get_user_data(id: str) -> dict:
     res = collection.find_one({'_id': ObjectId(id)})
     return {

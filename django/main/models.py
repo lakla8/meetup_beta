@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 
 # Create your models here.
@@ -18,5 +19,5 @@ class UserRecommend(models.Model):
     """Модель предоставляет рекомендации, адаптированные к конкретному пользователю."""
 
     user = models.OneToOneField(to=User, on_delete=models.SET_NULL, null=True)
-
+    id = models.CharField(max_length=10)
     # тут будут рекомендации

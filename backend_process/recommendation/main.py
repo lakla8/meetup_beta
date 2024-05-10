@@ -92,9 +92,7 @@ def clear_errors():
     create_json_file(data_places, '../resources/database.json')
 
 
-
-
-def find_similarity(client, db_filename):
+def find_similarity(client, db_filename: str = '../resources/database.json'):
     with open(db_filename) as f:
         data_places = json.load(f)['data_list']
 
