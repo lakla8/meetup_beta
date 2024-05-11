@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, APIRouter
 from .db import add_user_rec, get_user_data_rec
-from .models import NewClient, Partner, Recommendations, GroupResults
+from .models import NewClient, Partner, Recommendations, GroupRecs
 from ..recommendation.main import find_similarity
 from typing import List
 
@@ -45,10 +45,11 @@ async def get_user_data(id: str):
 
 
 @app.post("/algorithm", tags=["Group Functions"])
-async def algorithm_many(features: List[str], users_recommendations: List[List[str]]): #пока тупое решение
+async def algorithm_many(group_info: GroupRecs): #пока тупое решение
     try:
+        features = group_info.features
+        users_recommendations = group_info.users_recommendations
         cuisine = set()
-        print(users_recommendations)
         for user in users_recommendations:
             for rec in user:
                 cuisine.add(rec)
@@ -59,5 +60,5 @@ async def algorithm_many(features: List[str], users_recommendations: List[List[s
             }, result_amount=10)
         }
     except Exception as e:
-        print(users_recommendations)
+        print(group_info)
         raise HTTPException(500, detail=str(e))

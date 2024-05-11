@@ -8,6 +8,11 @@ class NewClient(BaseModel):
     cuisine: List[str]
 
 
+class GroupRecs(BaseModel):
+    features: List[str]
+    users_recommendations: List[List[str]]
+
+
 class Partner(BaseModel):
     id: str
     features: List[str]
