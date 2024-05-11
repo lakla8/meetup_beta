@@ -4,7 +4,6 @@ from typing import List
 
 class NewClient(BaseModel):
     id: str
-    client_id: str
     features: List[str]
     cuisine: List[str]
 
@@ -14,5 +13,10 @@ class Partner(BaseModel):
     features: List[str]
     cuisine: List[str]
 
+
 class Recommendations(BaseModel):
-    recs: List[str]
+    recs: List[List]
+
+
+class GroupResults(BaseModel):
+    result: dict

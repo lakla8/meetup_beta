@@ -4,8 +4,8 @@
 
 
 
-from qkiqsh import request_for_id, request_rest_data
-from olimp import create_json_file
+from .qkiqsh import request_for_id, request_rest_data
+from .olimp import create_json_file
 import os, json, numpy as np
 from dotenv import load_dotenv
 
@@ -77,7 +77,7 @@ def make_change():
         except Exception as err:
             place['cuisine_abs'] = [0.0] * len(abs_c)
 
-    create_json_file(data_places, '../resources/database.json')
+    create_json_file(data_places, '.../resources/database.json')
 
 
 def clear_errors():
@@ -89,18 +89,15 @@ def clear_errors():
             print(place)
             data_places.remove(place)
 
-    create_json_file(data_places, '../resources/database.json')
+    create_json_file(data_places, '.../resources/database.json')
 
 
-def find_similarity(client, db_filename: str = '../resources/database.json'):
+def find_similarity(client, db_filename: str = "/Users/korniliyzervas/PycharmProjects/olimp/meetup_beta/resources/database.json", result_amount: int = 5):
     with open(db_filename) as f:
         data_places = json.load(f)['data_list']
 
     abs_f = get_features_unique(data_places)
     abs_c = get_cuisine_unique(data_places)
-
-    print(abs_f)
-    print(abs_c)
 
     features = list_coherence(client['features'], abs_f, c=0.65)
     cuisine = list_coherence(client['cuisine'], abs_c, c=-1.0)
@@ -108,7 +105,6 @@ def find_similarity(client, db_filename: str = '../resources/database.json'):
     best_results = []
 
     for place in data_places:
-        print(place)
         f_angle = cosine_similarity(features, place["features_abs"])
         c_angle = cosine_similarity(cuisine, place['cuisine_abs'])
         if str(f_angle) == "nan" or str(c_angle) == "nan":
@@ -117,8 +113,7 @@ def find_similarity(client, db_filename: str = '../resources/database.json'):
             best_results.append([place['name'], place['features'], place['cuisine'], cosine_similarity([f_angle, c_angle], [1.0, 1.0])])
 
     best_results.sort(key=lambda x: x[3], reverse=True)
-
-    return best_results[:5]
+    return best_results[:result_amount]
 
 
 

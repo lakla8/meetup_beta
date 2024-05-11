@@ -1,18 +1,20 @@
 from fastapi import FastAPI, HTTPException, APIRouter
-from db import add_user, get_user_data
-from models import NewClient, Partner, Recommendations
+from .db import add_user_rec, get_user_data_rec
+from .models import NewClient, Partner, Recommendations, GroupResults
 from ..recommendation.main import find_similarity
+from typing import List
 
 app = FastAPI(docs_url="/")
 
 
-@app.post('/client', tags=["Endpoints"], response_model=NewClient)
+@app.post('/client', tags=["Client Functions"], response_model=NewClient)
 async def new_partner(client: NewClient):
     try:
-        id = add_user(client.client_id, client.features, client.cuisine, cost=None)
+        id = add_user_rec(client.id, client.features, client.cuisine, cost=None)
+        if id['id'] == "err":
+            raise HTTPException(status_code=id['status_code'], detail=id['details'])
         return {
             "id": id['id'],
-            "client_id": client.client_id,
             "features": client.features,
             "cuisine": client.cuisine,
         }
@@ -20,18 +22,42 @@ async def new_partner(client: NewClient):
         raise HTTPException(500, detail=str(e))
 
 
-@app.get("/client/{id}/recommendations", tags=["Endpoints"], response_model=Recommendations)
-async def get_user_rec(client_id: str):
+@app.get("/client/{id}/recommendations", tags=["Client Functions"], response_model=Recommendations)
+async def get_user_rec(id: str):
     try:
-        return {client_id: find_similarity(get_user_data(client_id))}
+        ans = get_user_data_rec(id)
+        if ans['id'] == "err":
+            raise HTTPException(status_code=ans['status_code'], detail=ans['details'])
+        return {"recs": find_similarity(ans)}
     except Exception as e:
         raise HTTPException(500, detail=str(e))
 
 
-@app.get('/client/{id}/info', tags=["Endpoints"], response_model=Partner)
-async def get_user_data(client_id: str):
+@app.get('/client/{id}/info', tags=["Client Functions"])
+async def get_user_data(id: str):
     try:
-        return get_user_data(client_id)
+        ans = get_user_data_rec(id)
+        if ans['id'] == "err":
+            raise HTTPException(status_code=ans['status_code'], detail=ans['details'])
+        return ans
     except Exception as e:
         raise HTTPException(500, detail=str(e))
 
+
+@app.post("/algorithm", tags=["Group Functions"])
+async def algorithm_many(features: List[str], users_recommendations: List[List[str]]): #пока тупое решение
+    try:
+        cuisine = set()
+        print(users_recommendations)
+        for user in users_recommendations:
+            for rec in user:
+                cuisine.add(rec)
+        return {
+            'result': find_similarity({
+                'features': features,
+                'cuisine': list(cuisine)
+            }, result_amount=10)
+        }
+    except Exception as e:
+        print(users_recommendations)
+        raise HTTPException(500, detail=str(e))
